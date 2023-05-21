@@ -3,23 +3,23 @@ import time
 from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
-from settings import sender_email, receiver_email, password
+from settings import sender_email, receiver_emails, password
 
 url = "https://ttp.cbp.dhs.gov/schedulerapi/slots?orderBy=soonest&limit=1&locationId=5444"
 # LocationId: EWR = 5444, JFK = 5140, PHL = 5445
-deadline = datetime(2023, 2, 25)
+deadline = datetime(2023, 2, 16)
 
 def notify_user(body):
     message = MIMEText(body)
     message["Subject"] = "Global Entry Appt Found"
     message["From"] = sender_email
-    message["To"] = receiver_email
+    message["To"] = ", ".join(receiver_emails)
     smtp = smtplib.SMTP("smtp.gmail.com", 587)
     smtp.ehlo()
     smtp.starttls()
     smtp.ehlo()
     smtp.login(sender_email, password)
-    smtp.sendmail(sender_email, receiver_email, message.as_string())
+    smtp.sendmail(sender_email, receiver_emails, message.as_string())
     smtp.quit()
 
 while True:
@@ -44,5 +44,7 @@ while True:
             print("No Appts Found")
     else:
         print("Request failed with status code:", response.status_code)
+
+    response.close()
         
     time.sleep(300) # wait x seconds before making the next request
