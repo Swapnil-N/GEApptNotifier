@@ -5,9 +5,9 @@ import smtplib
 from email.mime.text import MIMEText
 from settings import sender_email, receiver_emails, password
 
-url = "https://ttp.cbp.dhs.gov/schedulerapi/slots?orderBy=soonest&limit=1&locationId=5444"
-# LocationId: EWR = 5444, JFK = 5140, PHL = 5445
-deadline = datetime(2023, 2, 16)
+airportCode = "5444" # LocationId: EWR = 5444, JFK = 5140, PHL = 5445
+url = "https://ttp.cbp.dhs.gov/schedulerapi/slots?orderBy=soonest&limit=1&locationId="+airportCode
+deadline = datetime(2023, 11, 20)
 
 def notify_user(body):
     message = MIMEText(body)
